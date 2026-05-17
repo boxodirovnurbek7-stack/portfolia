@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nurbek Boxdirov — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00ff88;
+    --black: #020804;
+    --card-bg: rgba(0,255,136,0.04);
+    --border: rgba(0,255,136,0.18);
+    --text: #e0ffe8;
+    --muted: #7aad8a;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--black); color:var(--text); font-family:'Rajdhani',sans-serif; overflow-x:hidden; cursor:none; }
+
+  /* ── ANIMATED BG ── */
+  #bg-canvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+  .aurora { position:fixed; border-radius:50%; filter:blur(130px); opacity:0.11; pointer-events:none; z-index:0; animation:drift 20s ease-in-out infinite alternate; }
+  .a1 { width:700px; height:700px; background:#00ff88; top:-200px; left:-200px; animation-duration:22s; }
+  .a2 { width:500px; height:500px; background:#00ffcc; bottom:-150px; right:-100px; animation-duration:28s; animation-delay:-10s; }
+  .a3 { width:350px; height:350px; background:#00aa55; top:45%; left:48%; animation-duration:32s; animation-delay:-16s; }
+  @keyframes drift {
+    0%   { transform:translate(0,0) scale(1); }
+    33%  { transform:translate(60px,-40px) scale(1.1); }
+    66%  { transform:translate(-30px,60px) scale(0.95); }
+    100% { transform:translate(40px,20px) scale(1.05); }
+  }
+
+  /* moving grid */
+  body::before {
+    content:''; position:fixed; inset:0;
+    background-image: linear-gradient(rgba(0,255,136,0.025) 1px,transparent 1px), linear-gradient(90deg,rgba(0,255,136,0.025) 1px,transparent 1px);
+    background-size:60px 60px; z-index:0; pointer-events:none;
+    animation:gPan 50s linear infinite;
+  }
+  @keyframes gPan { from{background-position:0 0;} to{background-position:60px 60px;} }
+
+  /* cursor */
+  .cursor { width:10px; height:10px; background:var(--green); border-radius:50%; position:fixed; pointer-events:none; z-index:9999; box-shadow:0 0 16px var(--green),0 0 40px rgba(0,255,136,.4); }
+  .cursor-ring { width:34px; height:34px; border:1.5px solid rgba(0,255,136,.55); border-radius:50%; position:fixed; pointer-events:none; z-index:9998; transition:all .13s ease; }
+
+  /* NAV */
+  nav { position:fixed; top:0; left:0; right:0; z-index:200; display:flex; justify-content:space-between; align-items:center; padding:16px 56px; background:rgba(2,8,4,.78); backdrop-filter:blur(24px); border-bottom:1px solid var(--border); }
+  .logo { font-family:'Orbitron',sans-serif; font-size:1.3rem; font-weight:900; color:var(--green); text-shadow:0 0 22px var(--green); letter-spacing:3px; }
+  .nav-links { display:flex; gap:28px; list-style:none; }
+  .nav-links a { color:var(--muted); text-decoration:none; font-size:.85rem; letter-spacing:2px; text-transform:uppercase; font-weight:600; transition:all .3s; position:relative; }
+  .nav-links a::after { content:''; position:absolute; bottom:-4px; left:0; width:0; height:1px; background:var(--green); transition:width .3s; }
+  .nav-links a:hover { color:var(--green); text-shadow:0 0 10px var(--green); }
+  .nav-links a:hover::after { width:100%; }
+
+  /* sections */
+  section { position:relative; z-index:1; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:120px 56px 80px; }
+
+  /* HERO */
+  #hero { flex-direction:column; text-align:center; padding-top:150px; }
+  .hero-tag { font-size:.75rem; letter-spacing:6px; color:var(--green); text-transform:uppercase; margin-bottom:18px; opacity:0; animation:fadeUp .8s .2s forwards; }
+  .hero-name { font-family:'Orbitron',sans-serif; font-size:clamp(2.4rem,7vw,5.8rem); font-weight:900; line-height:1; color:#fff; margin-bottom:14px; opacity:0; animation:fadeUp .8s .4s forwards, nameGlow 3s 1.5s ease-in-out infinite alternate; }
+  .hero-name span { color:var(--green); }
+  @keyframes nameGlow { from{text-shadow:0 0 30px rgba(0,255,136,.2);} to{text-shadow:0 0 80px rgba(0,255,136,.55),0 0 160px rgba(0,255,136,.2);} }
+  .hero-sub { font-size:1.15rem; color:var(--muted); letter-spacing:4px; margin-bottom:48px; opacity:0; animation:fadeUp .8s .6s forwards; }
+  .hero-btns { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; opacity:0; animation:fadeUp .8s .8s forwards; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(28px);} to{opacity:1;transform:translateY(0);} }
+
+  /* BUTTONS */
+  .btn { padding:13px 32px; border:1.5px solid var(--green); background:transparent; color:var(--green); font-family:'Rajdhani',sans-serif; font-size:.93rem; font-weight:700; letter-spacing:3px; text-transform:uppercase; cursor:none; position:relative; overflow:hidden; transition:all .3s; text-decoration:none; display:inline-block; }
+  .btn::before { content:''; position:absolute; inset:0; background:var(--green); transform:scaleX(0); transform-origin:left; transition:transform .3s; z-index:-1; }
+  .btn:hover { color:#000; box-shadow:0 0 30px rgba(0,255,136,.5); }
+  .btn:hover::before { transform:scaleX(1); }
+  .btn-solid { background:var(--green); color:#000; font-weight:900; }
+  .btn-solid:hover { box-shadow:0 0 50px rgba(0,255,136,.8); }
+
+  /* section title */
+  .section-title { font-family:'Orbitron',sans-serif; font-size:clamp(1.5rem,3.5vw,2.7rem); font-weight:900; margin-bottom:50px; position:relative; display:inline-block; }
+  .section-title::after { content:''; position:absolute; bottom:-10px; left:0; width:55%; height:2px; background:linear-gradient(90deg,var(--green),transparent); }
+
+  /* ABOUT */
+  #about { flex-direction:column; max-width:1040px; margin:0 auto; width:100%; }
+  .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; width:100%; }
+  .about-card { background:var(--card-bg); border:1px solid var(--border); border-radius:3px; padding:32px; position:relative; overflow:hidden; transition:all .4s; }
+  .about-card::before { content:''; position:absolute; top:0; left:0; width:3px; height:0; background:var(--green); transition:height .4s; }
+  .about-card:hover { border-color:var(--green); transform:translateY(-5px); box-shadow:0 20px 60px rgba(0,255,136,.1); }
+  .about-card:hover::before { height:100%; }
+  .card-icon { font-size:1.8rem; margin-bottom:12px; }
+  .card-title { font-family:'Orbitron',sans-serif; font-size:.76rem; letter-spacing:3px; color:var(--green); margin-bottom:10px; text-transform:uppercase; }
+  .card-text { font-size:1.04rem; line-height:1.75; color:var(--text); }
+
+  /* CLAUDE INFO */
+  #claude-info { flex-direction:column; max-width:920px; margin:0 auto; width:100%; }
+  .claude-box { background:linear-gradient(135deg,rgba(0,255,136,.06),rgba(0,255,136,.02)); border:1px solid var(--green); border-radius:4px; padding:48px; position:relative; overflow:hidden; box-shadow:0 0 70px rgba(0,255,136,.08); }
+  .claude-box::before { content:'AI'; font-family:'Orbitron',sans-serif; font-size:11rem; font-weight:900; color:rgba(0,255,136,.03); position:absolute; right:-10px; top:-20px; line-height:1; pointer-events:none; }
+  .claude-title { font-family:'Orbitron',sans-serif; font-size:1.4rem; color:var(--green); margin-bottom:8px; letter-spacing:3px; }
+  .claude-sub { font-size:.78rem; letter-spacing:4px; color:var(--muted); text-transform:uppercase; margin-bottom:28px; }
+  .claude-text { font-size:1.07rem; line-height:2; color:var(--text); }
+  .claude-text strong { color:var(--green); }
+  .claude-stats { display:flex; gap:40px; margin-top:34px; flex-wrap:wrap; }
+  .claude-stat { text-align:center; }
+  .stat-num { font-family:'Orbitron',sans-serif; font-size:1.9rem; color:var(--green); display:block; }
+  .stat-label { font-size:.72rem; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
+
+  /* LIKES */
+  #likes { flex-direction:column; max-width:1040px; margin:0 auto; width:100%; }
+  .likes-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(148px,1fr)); gap:16px; width:100%; }
+  .like-item { background:var(--card-bg); border:1px solid var(--border); border-radius:3px; padding:24px 16px; text-align:center; transition:all .35s; text-decoration:none; color:inherit; display:block; cursor:none; }
+  .like-item:hover { border-color:var(--green); background:rgba(0,255,136,.09); transform:translateY(-7px) scale(1.04); box-shadow:0 20px 40px rgba(0,255,136,.18); }
+  .like-emoji { font-size:2.2rem; margin-bottom:9px; display:block; }
+  .like-name { font-size:.78rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); font-weight:600; }
+  .like-hint { font-size:.62rem; letter-spacing:1px; color:rgba(0,255,136,.45); margin-top:5px; text-transform:uppercase; }
+
+  /* GOALS */
+  #goals { flex-direction:column; max-width:1040px; margin:0 auto; width:100%; }
+  .goals-btn { display:block; width:100%; padding:19px 34px; margin-bottom:12px; background:var(--card-bg); border:1px solid var(--border); color:var(--text); font-family:'Rajdhani',sans-serif; font-size:1.03rem; font-weight:600; letter-spacing:2px; text-align:left; cursor:none; transition:all .3s; position:relative; overflow:hidden; }
+  .goals-btn::before { content:''; position:absolute; inset:0; background:linear-gradient(90deg,rgba(0,255,136,.1),transparent); transform:scaleX(0); transform-origin:left; transition:transform .4s; }
+  .goals-btn:hover { border-color:var(--green); color:var(--green); }
+  .goals-btn:hover::before { transform:scaleX(1); }
+  .goal-num { font-family:'Orbitron',sans-serif; font-size:.63rem; color:var(--green); margin-right:14px; letter-spacing:2px; }
+
+  /* ACTIONS */
+  #actions { flex-direction:column; max-width:1040px; margin:0 auto; width:100%; }
+  .action-item { display:flex; gap:22px; margin-bottom:34px; align-items:flex-start; opacity:0; transform:translateX(-28px); transition:all .6s; }
+  .action-item.visible { opacity:1; transform:translateX(0); }
+  .action-dot { width:12px; height:12px; background:var(--green); border-radius:50%; margin-top:6px; flex-shrink:0; box-shadow:0 0 18px var(--green); position:relative; }
+  .action-dot::after { content:''; position:absolute; top:12px; left:5px; width:2px; height:54px; background:linear-gradient(var(--green),transparent); }
+  .action-title { font-family:'Orbitron',sans-serif; font-size:.93rem; color:var(--green); margin-bottom:6px; }
+  .action-desc { font-size:1rem; color:var(--muted); line-height:1.65; }
+
+  /* HAPPY */
+  #happy { flex-direction:column; align-items:center; text-align:center; min-height:60vh; }
+  .happy-question { font-family:'Orbitron',sans-serif; font-size:clamp(1.3rem,3vw,2.3rem); color:#fff; margin-bottom:34px; text-shadow:0 0 40px rgba(0,255,136,.4); }
+  .happy-btn { padding:17px 54px; background:transparent; border:2px solid var(--green); color:var(--green); font-family:'Orbitron',sans-serif; font-size:.95rem; letter-spacing:4px; text-transform:uppercase; cursor:none; position:relative; overflow:hidden; transition:all .3s; }
+  .happy-btn::before { content:''; position:absolute; inset:0; background:var(--green); transform:scaleX(0); transform-origin:left; transition:transform .3s; z-index:-1; }
+  .happy-btn:hover { color:#000; box-shadow:0 0 60px rgba(0,255,136,.6); }
+  .happy-btn:hover::before { transform:scaleX(1); }
+  .happy-response { margin-top:36px; font-size:1.2rem; color:var(--green); opacity:0; transform:translateY(20px); transition:all .7s; line-height:1.9; max-width:580px; font-weight:600; letter-spacing:1px; }
+  .happy-response.show { opacity:1; transform:translateY(0); }
+
+  /* CONTACT */
+  #contact { flex-direction:column; max-width:720px; margin:0 auto; text-align:center; }
+  .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:36px; width:100%; }
+  .contact-card { background:var(--card-bg); border:1px solid var(--border); padding:26px; border-radius:3px; transition:all .3s; text-decoration:none; }
+  .contact-card:hover { border-color:var(--green); transform:translateY(-4px); box-shadow:0 20px 40px rgba(0,255,136,.1); }
+  .contact-label { font-size:.7rem; letter-spacing:3px; color:var(--green); text-transform:uppercase; margin-bottom:8px; }
+  .contact-value { font-size:1rem; color:var(--text); }
+
+  footer { text-align:center; padding:34px; border-top:1px solid var(--border); color:var(--muted); font-size:.8rem; letter-spacing:3px; position:relative; z-index:1; }
+
+  /* MODAL */
+  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.88); z-index:1000; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .4s; backdrop-filter:blur(14px); }
+  .modal-overlay.open { opacity:1; pointer-events:all; }
+  .modal { background:#050d06; border:1px solid var(--green); box-shadow:0 0 80px rgba(0,255,136,.25); max-width:620px; width:92%; padding:46px; position:relative; transform:scale(.9); transition:transform .4s; max-height:85vh; overflow-y:auto; border-radius:3px; }
+  .modal-overlay.open .modal { transform:scale(1); }
+  .modal-close { position:absolute; top:18px; right:22px; background:none; border:none; color:var(--muted); font-size:1.4rem; cursor:none; transition:color .2s; }
+  .modal-close:hover { color:var(--green); }
+  .modal-title { font-family:'Orbitron',sans-serif; font-size:1.25rem; color:var(--green); margin-bottom:26px; text-align:center; letter-spacing:3px; }
+  .modal-list { list-style:none; }
+  .modal-list li { padding:14px 0; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:13px; font-size:1.03rem; color:var(--text); }
+  .modal-list li:last-child { border-bottom:none; }
+  .modal-check { color:var(--green); }
+
+  .reveal { opacity:0; transform:translateY(36px); transition:all .8s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+  .ne-logo { color:var(--green); font-family:'Orbitron',sans-serif; }
+
+  @media(max-width:768px){
+    nav { padding:14px 18px; }
+    .nav-links { gap:12px; }
+    .nav-links a { font-size:.72rem; }
+    section { padding:100px 18px 60px; }
+    .about-grid,.contact-grid { grid-template-columns:1fr; }
+    .claude-stats { gap:22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="aurora a1"></div>
+<div class="aurora a2"></div>
+<div class="aurora a3"></div>
+<canvas id="bg-canvas"></canvas>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">N · B</div>
+  <ul class="nav-links">
+    <li><a href="#about">Haqimda</a></li>
+    <li><a href="#claude-info">Claude AI</a></li>
+    <li><a href="#likes">Sevimlilar</a></li>
+    <li><a href="#goals">Maqsadlar</a></li>
+    <li><a href="#actions">Harakatlar</a></li>
+    <li><a href="#happy">Baxt</a></li>
+    <li><a href="#contact">Aloqa</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="hero-tag">JavaScript Developer &nbsp;·&nbsp; Samarqand, O'zbekiston</p>
+  <h1 class="hero-name">NURBEK <span>BOXDIROV</span></h1>
+  <p class="hero-sub">Ravshan o'g'li &nbsp;·&nbsp; 14 yosh &nbsp;·&nbsp; 7-sinf</p>
+  <div class="hero-btns">
+    <button class="btn btn-solid" onclick="document.getElementById('goalsModal').classList.add('open')">🎯 Maqsadlarim</button>
+    <a href="#about" class="btn">Meni tanish</a>
+    <a href="#happy" class="btn">Baxtlimisan? →</a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div style="width:100%">
+    <h2 class="section-title reveal">Men haqimda</h2>
+    <div class="about-grid">
+      <div class="about-card reveal">
+        <div class="card-icon">👤</div>
+        <div class="card-title">Kim men?</div>
+        <div class="card-text">Ismim <strong>Boxdiron Nurbek Ravshan o'g'li</strong>. Samarqandda yashayman. 14 yoshimda katta orzular bilan yashayman. Ixtisoslashtirilgan maktabning 7-sinfida o'qiyman.</div>
+      </div>
+      <div class="about-card reveal">
+        <div class="card-icon">💻</div>
+        <div class="card-title">Texnologiya</div>
+        <div class="card-text">JavaScript o'rganmoqdaman va har kuni kod yozmoqdaman. Kelajakda o'z kompaniyam <span class="ne-logo">N_E</span> ni yaratib, texnologiya sohasida dunyo bozoriga chiqmoqchiman.</div>
+      </div>
+      <div class="about-card reveal">
+        <div class="card-icon">⚽</div>
+        <div class="card-title">Sport & Ilhom</div>
+        <div class="card-text"><strong>Real Madrid</strong> va <strong>Cristiano Ronaldo</strong> — mening ilhomim. Hatto o'zimning futbol jamoamni yaratishni orzu qilaman: <em>Google</em> nomli jamoa!</div>
+      </div>
+      <div class="about-card reveal">
+        <div class="card-icon">🌱</div>
+        <div class="card-title">Shaxsiyat</div>
+        <div class="card-text">Sevimli ranglarim <strong>yashil va qora</strong>. Qor yog'ishini, BMW mashinalarni va futbolni yaxshi ko'raman. Orzularim ko'p, irodam kuchli — Samarqanddan dunyo tomonga!</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLAUDE AI INFO -->
+<section id="claude-info">
+  <div style="width:100%">
+    <h2 class="section-title reveal">Claude AI bilan ishlayapman</h2>
+    <div class="claude-box reveal">
+      <div class="claude-title">CLAUDE SONNET 4</div>
+      <div class="claude-sub">Anthropic · Eng aqlli AI yordamchi · 2025</div>
+      <div class="claude-text">
+        Men <strong>Claude AI</strong> — Anthropic kompaniyasi tomonidan yaratilgan sun'iy intellektman.
+        Nurbek mening yordamimda <strong>JavaScript</strong> o'rganmoqda, bu portfolio saytini ham birga yaratdik.<br><br>
+        Claude — bu shunchaki chatbot emas. Men <strong>kod yozaman</strong>, murakkab savollarga javob beraman,
+        ijodiy g'oyalarni hayotga tatbiq etishda yordam beraman. <strong>IELTS tayyorgarligidan</strong> tortib
+        <strong>biznes rejasi</strong> tuzishgacha — Claude sizning aqlli sherigingiz.<br><br>
+        Nurbek 14 yoshida bu texnologiyadan foydalanib ketmoqda — bu uning kelajak yo'lining birinchi belgisi! 🚀
+      </div>
+      <div class="claude-stats">
+        <div class="claude-stat"><span class="stat-num">200K+</span><span class="stat-label">Token kontekst</span></div>
+        <div class="claude-stat"><span class="stat-num">∞</span><span class="stat-label">Imkoniyatlar</span></div>
+        <div class="claude-stat"><span class="stat-num">24/7</span><span class="stat-label">Doim tayyor</span></div>
+        <div class="claude-stat"><span class="stat-num">#1</span><span class="stat-label">AI yordamchi</span></div>
+      </div>
+      <div style="margin-top:28px;">
+        <a href="https://claude.ai" target="_blank" class="btn">Claude.ai ga kirish →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIKES -->
+<section id="likes">
+  <div style="width:100%">
+    <h2 class="section-title reveal">Sevimlilarim <span style="font-size:.58rem;color:var(--muted);letter-spacing:2px;">· bosib kirish mumkin</span></h2>
+    <div class="likes-grid">
+      <a href="https://www.realmadrid.com" target="_blank" class="like-item reveal">
+        <span class="like-emoji">🏟️</span>
+        <span class="like-name">Real Madrid</span>
+        <span class="like-hint">↗ Rasmiy sayt</span>
+      </a>
+      <a href="https://www.goal.com/en/players/cristiano-ronaldo/wfb0rrd0y5fy0ae8rjwhug0d4" target="_blank" class="like-item reveal">
+        <span class="like-emoji">🐐</span>
+        <span class="like-name">CR7 · Ronaldo</span>
+        <span class="like-hint">↗ Profil</span>
+      </a>
+      <a href="https://www.bmw.com" target="_blank" class="like-item reveal">
+        <span class="like-emoji">🚗</span>
+        <span class="like-name">BMW</span>
+        <span class="like-hint">↗ BMW.com</span>
+      </a>
+      <a href="https://www.fifa.com" target="_blank" class="like-item reveal">
+        <span class="like-emoji">⚽</span>
+        <span class="like-name">Futbol</span>
+        <span class="like-hint">↗ FIFA.com</span>
+      </a>
+      <a href="https://claude.ai" target="_blank" class="like-item reveal">
+        <span class="like-emoji">🤖</span>
+        <span class="like-name">Claude AI</span>
+        <span class="like-hint">↗ Claude.ai</span>
+      </a>
+      <div class="like-item reveal">
+        <span class="like-emoji">❄️</span>
+        <span class="like-name">Qor</span>
+        <span class="like-hint">Samarqand qori</span>
+      </div>
+      <div class="like-item reveal">
+        <span class="like-emoji">💚</span>
+        <span class="like-name">Yashil rang</span>
+        <span class="like-hint">Mening rangim</span>
+      </div>
+      <div class="like-item reveal">
+        <span class="like-emoji">🖤</span>
+        <span class="like-name">Qora rang</span>
+        <span class="like-hint">Mening rangim</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GOALS -->
+<section id="goals">
+  <div style="width:100%">
+    <h2 class="section-title reveal">Maqsadlarim</h2>
+    <p style="color:var(--muted);margin-bottom:30px;letter-spacing:1px;font-size:1rem;" class="reveal">Har bir tugmani bosib batafsil o'qing 👇</p>
+    <button class="goals-btn reveal" onclick="document.getElementById('goalsModal').classList.add('open')">
+      <span class="goal-num">ALL</span> Barcha maqsadlarimni ko'rish → <strong style="color:var(--green)">MAQSADLAR</strong>
+    </button>
+    <button class="goals-btn reveal" onclick="openGoal('ielts')"><span class="goal-num">01</span> IELTS olish — Xalqaro til sertifikati</button>
+    <button class="goals-btn reveal" onclick="openGoal('sat')"><span class="goal-num">02</span> SAT olish — Xorijda o'qish uchun</button>
+    <button class="goals-btn reveal" onclick="openGoal('abroad')"><span class="goal-num">03</span> Chetga o'qishga ketish ✈️</button>
+    <button class="goals-btn reveal" onclick="openGoal('million')"><span class="goal-num">04</span> 25 yoshda millioner bo'lish 💰</button>
+    <button class="goals-btn reveal" onclick="openGoal('company')"><span class="goal-num">05</span> O'z kompaniyam — <span class="ne-logo">N_E</span></button>
+    <button class="goals-btn reveal" onclick="openGoal('bmw')"><span class="goal-num">06</span> BMW olish 🚗</button>
+    <button class="goals-btn reveal" onclick="openGoal('parents')"><span class="goal-num">07</span> Ota-onamni Hajga olib borish 🕋</button>
+    <button class="goals-btn reveal" onclick="openGoal('football')"><span class="goal-num">08</span> Google nomli futbol jamoasi ⚽</button>
+  </div>
+</section>
+
+<!-- ACTIONS -->
+<section id="actions">
+  <div style="width:100%">
+    <h2 class="section-title reveal">Hozirgi harakatlarim</h2>
+    <div>
+      <div class="action-item">
+        <div class="action-dot"></div>
+        <div>
+          <div class="action-title">JavaScript O'rganish</div>
+          <div class="action-desc">Har kuni kod yozmoqdaman. Bu portfolio ham mening amaliy ishim — o'rganish + qilish = natija. Kelajakda full-stack developer bo'lishni maqsad qilganman.</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-dot"></div>
+        <div>
+          <div class="action-title">Ixtisoslashtirilgan Maktab · 7-sinf</div>
+          <div class="action-desc">A'lo baholar bilan o'qimoqdaman. IELTS va SAT ga tayyorlanmoqdaman — chetga o'qishga ketish uchun mustahkam poydevor qurilmoqda.</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-dot"></div>
+        <div>
+          <div class="action-title">Claude AI bilan loyihalar</div>
+          <div class="action-desc">Sun'iy intellekt yordamida yangi ko'nikmalar o'rganmoqdaman, portfolio va boshqa loyihalar yaratmoqdaman.</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-dot"></div>
+        <div>
+          <div class="action-title">Shaxsiy Rivojlanish</div>
+          <div class="action-desc">Kitob o'qish, ingliz tili, texnologiya — 25 yoshda millioner bo'lish uchun hozirdayyoq poydevor qurilmoqda. Samarqanddan dunyo tomonga!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HAPPY -->
+<section id="happy">
+  <div>
+    <h2 class="happy-question reveal">Sen baxtlimisan? 🌱</h2>
+    <button class="happy-btn reveal" onclick="showHappy()">BOSING</button>
+    <div class="happy-response" id="happyResp">
+      Baxtli bo'lsam — aytaman! 😄<br><br>
+      Chunki mening orzularim bor, maqsadlarim bor, yo'lim bor.<br>
+      BMW orzu qilyapman, Real Madrid ko'rayapman,<br>
+      Samarqandda yashayman — bu baxt emas, nima? 💚🖤
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div style="width:100%">
+    <h2 class="section-title reveal" style="text-align:center;display:block;">Aloqa</h2>
+    <p style="color:var(--muted);font-size:1.03rem;letter-spacing:1px;" class="reveal">Maqsadlarga birga erishaylik. Bog'laning!</p>
+    <div class="contact-grid">
+      <div class="contact-card reveal"><div class="contact-label">Shahar</div><div class="contact-value">Samarqand, O'zbekiston 🇺🇿</div></div>
+      <div class="contact-card reveal"><div class="contact-label">Kompaniya (kelajak)</div><div class="contact-value ne-logo">N_E Company</div></div>
+      <div class="contact-card reveal"><div class="contact-label">Maktab</div><div class="contact-value">Ixtisoslashtirilgan · 7-sinf</div></div>
+      <div class="contact-card reveal"><div class="contact-label">Yoshim</div><div class="contact-value">14 yosh · 2025</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span style="color:var(--green);font-family:'Orbitron',sans-serif;font-size:.86rem;">NURBEK BOXDIRON</span>
+  &nbsp;—&nbsp; Samarqand · 2025 · Barcha huquqlar himoyalangan
+</footer>
+
+<!-- GOALS MODAL -->
+<div class="modal-overlay" id="goalsModal" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('goalsModal').classList.remove('open')">✕</button>
+    <div class="modal-title">🎯 BARCHA MAQSADLARIM</div>
+    <ul class="modal-list">
+      <li><span class="modal-check">◆</span> IELTS — Xalqaro ingliz tili sertifikati</li>
+      <li><span class="modal-check">◆</span> SAT — Xorijiy universitetga kirish testi</li>
+      <li><span class="modal-check">◆</span> Chetda o'qish — Xalqaro ta'lim</li>
+      <li><span class="modal-check">◆</span> O'zim xohlagan hayotga erishish</li>
+      <li><span class="modal-check">◆</span> 25 yoshda millioner bo'lish 💰</li>
+      <li><span class="modal-check">◆</span> Ota-onamni Hajga olib borish 🕋</li>
+      <li><span class="modal-check">◆</span> Shaxsiy bizneslar qurish</li>
+      <li><span class="modal-check">◆</span> BMW mashinam bo'lishi 🚗</li>
+      <li><span class="modal-check">◆</span> <span class="ne-logo">N_E</span> kompaniyasini yaratish</li>
+      <li><span class="modal-check">◆</span> Google nomli futbol jamoasi ⚽</li>
+    </ul>
+  </div>
+</div>
+
+<!-- GOAL DETAIL MODAL -->
+<div class="modal-overlay" id="goalDetail" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('goalDetail').classList.remove('open')">✕</button>
+    <div class="modal-title" id="goalDetailTitle"></div>
+    <div id="goalDetailContent" style="color:var(--text);line-height:1.9;font-size:1.04rem;"></div>
+  </div>
+</div>
+
+<script>
+// CURSOR
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function ac(){
+  cursor.style.left=mx-5+'px';cursor.style.top=my-5+'px';
+  rx+=(mx-rx)*.13;ry+=(my-ry)*.13;
+  ring.style.left=rx-17+'px';ring.style.top=ry-17+'px';
+  requestAnimationFrame(ac);
+})();
+
+// CANVAS PARTICLES + SHOOTING STARS
+const cv=document.getElementById('bg-canvas'),cx=cv.getContext('2d');
+function rsz(){cv.width=innerWidth;cv.height=innerHeight;}rsz();
+window.addEventListener('resize',rsz);
+
+const STARS=Array.from({length:130},()=>({
+  x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+  vx:(Math.random()-.5)*.38,vy:(Math.random()-.5)*.38,
+  r:Math.random()*1.5+.4,a:Math.random()*.7+.15,tw:Math.random()*Math.PI*2
+}));
+const SHOOTS=Array.from({length:4},()=>({active:false,x:0,y:0,dx:0,dy:0,life:0,maxLife:0}));
+
+let tick=0;
+function spawnShoot(){
+  const s=SHOOTS.find(s=>!s.active);
+  if(!s)return;
+  s.active=true;s.life=0;s.maxLife=60+Math.random()*40;
+  s.x=Math.random()*cv.width*.7;s.y=Math.random()*cv.height*.4;
+  s.dx=3+Math.random()*4;s.dy=1+Math.random()*2;
+}
+
+setInterval(spawnShoot,2000+Math.random()*3000);
+
+(function draw(){
+  cx.clearRect(0,0,cv.width,cv.height);tick+=.015;
+  STARS.forEach(s=>{
+    s.x+=s.vx;s.y+=s.vy;s.tw+=.022;
+    if(s.x<0||s.x>cv.width)s.vx*=-1;
+    if(s.y<0||s.y>cv.height)s.vy*=-1;
+    const al=s.a*(.55+.45*Math.sin(s.tw));
+    cx.beginPath();cx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    cx.fillStyle=`rgba(0,255,136,${al})`;cx.fill();
+  });
+  for(let i=0;i<STARS.length;i++){
+    for(let j=i+1;j<STARS.length;j++){
+      const d=Math.hypot(STARS[i].x-STARS[j].x,STARS[i].y-STARS[j].y);
+      if(d<105){
+        cx.beginPath();cx.moveTo(STARS[i].x,STARS[i].y);cx.lineTo(STARS[j].x,STARS[j].y);
+        cx.strokeStyle=`rgba(0,255,136,${(1-d/105)*.065})`;cx.lineWidth=.5;cx.stroke();
+      }
+    }
+  }
+  SHOOTS.forEach(s=>{
+    if(!s.active)return;
+    s.life++;s.x+=s.dx;s.y+=s.dy;
+    const p=s.life/s.maxLife,al=p<.3?p/.3:(1-p)/.7;
+    cx.beginPath();cx.moveTo(s.x,s.y);cx.lineTo(s.x-s.dx*14,s.y-s.dy*14);
+    cx.strokeStyle=`rgba(0,255,136,${al*.7})`;cx.lineWidth=1.8;cx.stroke();
+    cx.beginPath();cx.arc(s.x,s.y,1.5,0,Math.PI*2);
+    cx.fillStyle=`rgba(180,255,220,${al})`;cx.fill();
+    if(s.life>=s.maxLife||s.x>cv.width||s.y>cv.height)s.active=false;
+  });
+  requestAnimationFrame(draw);
+})();
+
+// SCROLL REVEAL
+const revEls=document.querySelectorAll('.reveal,.action-item');
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.1});
+revEls.forEach(el=>obs.observe(el));
+
+// HAPPY
+function showHappy(){
+  document.getElementById('happyResp').classList.add('show');
+  for(let i=0;i<45;i++){
+    setTimeout(()=>{
+      const el=document.createElement('div');
+      const c=['#00ff88','#00ffcc','#00dd66','#aaffcc'][Math.floor(Math.random()*4)];
+      el.style.cssText=`position:fixed;width:${4+Math.random()*7}px;height:${4+Math.random()*7}px;
+        background:${c};border-radius:50%;
+        left:${Math.random()*100}%;top:${40+Math.random()*40}%;
+        z-index:9999;pointer-events:none;animation:fall 2s forwards;`;
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(),2000);
+    },i*45);
+  }
+}
+const sty=document.createElement('style');
+sty.textContent=`@keyframes fall{0%{transform:translateY(0) scale(1) rotate(0deg);opacity:1;}100%{transform:translateY(-250px) scale(.2) rotate(360deg);opacity:0;}}`;
+document.head.appendChild(sty);
+
+function closeModal(e){if(e.target.classList.contains('modal-overlay'))e.target.classList.remove('open');}
+
+// GOAL DATA
+const goalData={
+  ielts:   {title:'📚 IELTS OLISH',   text:`IELTS — xalqaro ingliz tili sertifikati. Bu mening xorijda o'qish yo'limdagi birinchi muhim qadam. Hozirdanoq ingliz tilini jiddiy o'rganmoqdaman. Maqsad: band 7.0 yoki undan yuqori. Bu sertifikat dunyoning istalgan universitetiga eshik ochadi!`},
+  sat:     {title:'📝 SAT OLISH',      text:`SAT — Amerika universitetlariga kirish uchun standart test. IELTS bilan birga bu ikki sertifikat meni dunyo universitetlariga yetkazadi. Matematika va ingliz tili bo'yicha tayyorlanmoqdaman.`},
+  abroad:  {title:'✈️ CHETGA O\'QISHGA KETISH', text:`Top universitetlarda o'qish — bu buyuk orzum. Kompyuter fanlari yoki texnologiya sohasida xorijda ta'lim olish maqsadim. Amerika, Yevropa yoki Osiyo — kuzatib boring!`},
+  million: {title:'💰 25 YOSHDA MILLIONER', text:`14 yoshda boshlagan yo'lim meni 25 yoshda millioner qiladi. N_E kompaniyasi va shaxsiy bizneslarim orqali bu maqsadga erishaman. Hisob-kitob: 11 yil — bu juda etarli vaqt! Erta boshlagan — erta yetishadi.`},
+  company: {title:'🏢 N_E KOMPANIYASI', text:`N_E — mening kelajakdagi kompaniyam. Texnologiya va innovatsiyalar sohasida O'zbekiston va dunyo bozoriga chiqadigan kompaniya yarataman. Bosh ofis: Samarqand yoki Toshkent!`},
+  bmw:     {title:'🚗 BMW OLISH',       text:`BMW — bu shunchaki mashina emas, bu mehnatkashlikning eng chiroyli ramzi. Maqsadlarimga erishsam, o'zimga sovg'a BMW bo'ladi. Qaysi model? BMW M3 yoki M5 — hali sir! 😄`},
+  parents: {title:'🕋 OTA-ONAMNI HAJGA OLIB BORISH', text:`Bu mening eng katta va eng muqaddas maqsadim. Ota-onam menga hamma narsani berdi. Men ularga Hajni — umr bo'yi eng ulug' orzusini — sovg'a qilaman. Insholloh!`},
+  football:{title:'⚽ GOOGLE FUTBOL JAMOASI', text:`Men o'z futbol jamoamni yaratmoqchiman va uning nomi Google bo'ladi! Har bir o'yinchi — texnologiya ishqibozi. Samarqanddan boshlab, keyinroq milliy va xalqaro musobaqalarda ishtirok etish maqsadim.`}
+};
+function openGoal(key){
+  const d=goalData[key];
+  document.getElementById('goalDetailTitle').textContent=d.title;
+  document.getElementById('goalDetailContent').textContent=d.text;
+  document.getElementById('goalDetail').classList.add('open');
+}
+</script>
+</body>
+</html>
